@@ -106,32 +106,38 @@ def construct_feature_columns():
   bucketized_households = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("households"),
     boundaries=get_quantile_based_buckets(training_examples["households"], 10))
+  
   bucketized_longitude = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("longitude"),
     boundaries=get_quantile_based_buckets(training_examples["longitude"], 50))
+  
   bucketized_latitude = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("latitude"),
     boundaries=get_quantile_based_buckets(training_examples["latitude"], 50))
+  
   bucketized_housing_median_age = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("housing_median_age"),
-    boundaries=get_quantile_based_buckets(
-      training_examples["housing_median_age"], 10))
+    boundaries=get_quantile_based_buckets(training_examples["housing_median_age"], 10))
+  
   bucketized_total_rooms = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("total_rooms"),
     boundaries=get_quantile_based_buckets(training_examples["total_rooms"], 10))
+  
   bucketized_total_bedrooms = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("total_bedrooms"),
     boundaries=get_quantile_based_buckets(training_examples["total_bedrooms"], 10))
+  
   bucketized_population = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("population"),
     boundaries=get_quantile_based_buckets(training_examples["population"], 10))
+  
   bucketized_median_income = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("median_income"),
     boundaries=get_quantile_based_buckets(training_examples["median_income"], 10))
+  
   bucketized_rooms_per_person = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column("rooms_per_person"),
-    boundaries=get_quantile_based_buckets(
-      training_examples["rooms_per_person"], 10))
+    boundaries=get_quantile_based_buckets(training_examples["rooms_per_person"], 10))
 
   long_x_lat = tf.feature_column.crossed_column(
     set([bucketized_longitude, bucketized_latitude]), hash_bucket_size=1000)
@@ -210,8 +216,7 @@ def train_linear_classifier_model(
                                                     num_epochs=1, 
                                                     shuffle=False)
   
-  # Train the model, but do so inside a loop so that we can periodically assess
-  # loss metrics.
+  # Train the model, but do so inside a loop so that we can periodically assess loss metrics.
   print("Training model...")
   print("LogLoss (on validation data):")
   training_log_losses = []
