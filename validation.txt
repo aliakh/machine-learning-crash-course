@@ -1,3 +1,27 @@
+from __future__ import print_function
+
+import math
+
+from IPython import display
+from matplotlib import cm
+from matplotlib import gridspec
+from matplotlib import pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+import tensorflow as tf
+from tensorflow.python.data import Dataset
+
+tf.logging.set_verbosity(tf.logging.ERROR)
+pd.options.display.max_rows = 10
+pd.options.display.float_format = '{:.1f}'.format
+
+california_housing_dataframe = pd.read_csv("https://storage.googleapis.com/mledu-datasets/california_housing_train.csv", sep=",")
+
+california_housing_dataframe = california_housing_dataframe.reindex(
+    np.random.permutation(california_housing_dataframe.index))
+
+
 def preprocess_features(california_housing_dataframe):
   """Prepares input features from California housing data set.
 
@@ -24,6 +48,7 @@ def preprocess_features(california_housing_dataframe):
     california_housing_dataframe["population"])
   return processed_features
 
+
 def preprocess_targets(california_housing_dataframe):
   """Prepares target features (i.e., labels) from California housing data set.
 
@@ -41,15 +66,15 @@ def preprocess_targets(california_housing_dataframe):
 
 
 training_examples = preprocess_features(california_housing_dataframe.head(12000))
-training_targets = preprocess_targets(california_housing_dataframe.head(12000))
-
-validation_examples = preprocess_features(california_housing_dataframe.tail(5000))
-validation_targets = preprocess_targets(california_housing_dataframe.tail(5000))
-
 training_examples.describe()
+
+training_targets = preprocess_targets(california_housing_dataframe.head(12000))
 training_targets.describe()
 
+validation_examples = preprocess_features(california_housing_dataframe.tail(5000))
 validation_examples.describe()
+
+validation_targets = preprocess_targets(california_housing_dataframe.tail(5000))
 validation_targets.describe()
 
 
@@ -149,8 +174,7 @@ def train_model(
                                                     num_epochs=1, 
                                                     shuffle=False)
 
-  # Train the model, but do so inside a loop so that we can periodically assess
-  # loss metrics.
+  # Train the model, but do so inside a loop so that we can periodically assess loss metrics.
   print("Training model...")
   print("RMSE (on training data):")
   training_rmse = []
@@ -208,11 +232,10 @@ california_housing_test_data = pd.read_csv("https://storage.googleapis.com/mledu
 test_examples = preprocess_features(california_housing_test_data)
 test_targets = preprocess_targets(california_housing_test_data)
 
-predict_test_input_fn = lambda: my_input_fn(
-      test_examples, 
-      test_targets["median_house_value"], 
-      num_epochs=1, 
-      shuffle=False)
+predict_test_input_fn = lambda: my_input_fn(test_examples, 
+                                            test_targets["median_house_value"], 
+                                            num_epochs=1, 
+                                            shuffle=False)
 
 test_predictions = linear_regressor.predict(input_fn=predict_test_input_fn)
 test_predictions = np.array([item['predictions'][0] for item in test_predictions])
@@ -221,5 +244,3 @@ root_mean_squared_error = math.sqrt(
     metrics.mean_squared_error(test_predictions, test_targets))
 
 print("Final RMSE (on test data): %0.2f" % root_mean_squared_error)
-
-
