@@ -10,7 +10,7 @@ def train_nn_classification_model(
   """Trains a neural network classification model for the MNIST digits dataset.
   
   In addition to training, this function also prints training progress information,
-  a plot of the training and validation loss over time, as well as a confusion
+  a plot of the training and validation loss over time, and a confusion
   matrix.
   
   Args:
@@ -30,7 +30,7 @@ def train_nn_classification_model(
 
   periods = 10
   steps_per_period = steps / periods  
-  
+
   # Create the input functions.
   predict_training_input_fn = create_predict_input_fn(
     training_examples, training_targets, batch_size)
